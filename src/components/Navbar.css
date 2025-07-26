@@ -1,0 +1,47 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #858D71;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-links a.active {
+  font-weight: bold;
+  border-bottom: 2px solid #333;
+}
+
+.hero {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.branding {
+  display: flex;
+  align-items: center;   
+  gap: 1rem;   
+}
+
+.logo {
+  height: 60px;  
+  width: auto;
+  border-radius: 50%;
+}
+
+.brand-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0B2C3D;
+  margin: 0;  
+  line-height: 1;  
+}
