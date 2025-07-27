@@ -8,6 +8,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/journal" element={<Journal />} />
+      {/* <Route path="/journal/:id" element={<JournalDetail />} /> */}
     </Routes>
   );
 }
