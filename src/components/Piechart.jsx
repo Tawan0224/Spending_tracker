@@ -2,7 +2,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-function PieChart({ data }) {
+function ChartPie({ data }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
@@ -23,4 +23,4 @@ function PieChart({ data }) {
     </ResponsiveContainer>
   );
 }
-export default PieChart;
+export default ChartPie;

@@ -1,6 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-function LineChart({ data }) {
+function ChartLine({ data }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
@@ -12,4 +12,4 @@ function LineChart({ data }) {
     </ResponsiveContainer>
   );
 }
-export default LineChart;
+export default ChartLine;
