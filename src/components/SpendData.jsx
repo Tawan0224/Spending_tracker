@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useLocalStorage } from '@uidotdev/usehooks';
+import spendingCategoryData from '../assets/spending-category.json';
+import categoryDataJson from '../assets/category.json';
 
 export default function useSpendingDataStorage() {
     const [spendingData, setSpendingData] = useLocalStorage('spendingData', []);
@@ -7,12 +9,10 @@ export default function useSpendingDataStorage() {
     let latest_id = spendingData.length > 0 ? spendingData[spendingData.length - 1].spending_id : 0;
 
     useEffect(() => {
-        const loadInitialData = async () => {
+        const loadInitialData = () => {
             if (spendingData.length === 0) {
                 try {
-                    const res = await fetch('/spending-category.json');
-                    const data = await res.json();
-                    setSpendingData(data);
+                    setSpendingData(spendingCategoryData);
                 } catch (err) {
                     console.error('Failed to load spending data JSON:', err);
                 }
@@ -20,9 +20,7 @@ export default function useSpendingDataStorage() {
 
             if (categoryData.length === 0) {
                 try {
-                    const res = await fetch('/category.json');
-                    const data = await res.json();
-                    setCategoryData(data);
+                    setCategoryData(categoryDataJson);
                 } catch (err) {
                     console.error('Failed to load category data JSON:', err);
                 }
@@ -31,7 +29,6 @@ export default function useSpendingDataStorage() {
 
         loadInitialData();
     }, []);
-
 
     return [spendingData, setSpendingData, latest_id, categoryData, setCategoryData];
 }
