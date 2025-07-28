@@ -8,9 +8,10 @@ uses Bootstrap for UI design and Rechart for the charts
 
 📸 Screenshots
 ### Dashboard
-![alt text](<src/assets/Screenshot 2025-07-28 at 11.25.05PM.png>)
+![alt text](./src/assets/Dashboard.png)
+
 
 ### Journal
-![alt text](<src/assets/Screenshot 2025-07-28 at 11.25.19PM.png>)
-![alt text](<src/assets/Screenshot 2025-07-28 at 11.25.41PM.png>)
-![alt text](<src/assets/Screenshot 2025-07-28 at 11.25.48PM.png>)
+![alt text1](./src/assets/Journal1.png)
+![alt text2](./src/assets/Journal2.png)
+![alt text3](./src/assets/Journal3.png)
