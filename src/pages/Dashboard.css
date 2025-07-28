@@ -1,0 +1,40 @@
+.dashboard-container {
+  margin: 2rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-header select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+.chart-section {
+  margin-top: 2rem;
+}
+
+.chart-title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+ 
+.totals-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  color: #0B2C3D;
+  margin: 1rem;
+}
+
+.total-box {
+  background-color: #858D71;
+  padding: 16px;
+  border-radius: 8px;
+  width: 47%;
+}

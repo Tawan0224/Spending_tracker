@@ -12,10 +12,10 @@ export default function Navbar() {
     </div>
       <ul className="nav-links">
         <li>
-          <Link className={location.pathname === '/' ? 'active' : ''} to="/">Dashboard</Link>
+          <Link className={location.pathname === '/' ? 'active' : ''} to="/"><i class="fa-solid fa-chart-line"></i> Dashboard</Link>
         </li>
         <li>
-          <Link className={location.pathname === '/journal' ? 'active' : ''} to="/journal">Journal</Link>
+          <Link className={location.pathname === '/journal' ? 'active' : ''} to="/journal"><i class="fa-solid fa-plus"></i> Journal</Link>
         </li>
       </ul>
     </nav>
