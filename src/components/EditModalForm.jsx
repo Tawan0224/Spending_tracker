@@ -1,12 +1,27 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react';
 
-function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpendingData, idToAdd, isEditing = false, editId = null }) {
+function EditModalForm({ categoryData, isModalOpen, setIsModalOpen, spendingData, setSpendingData, editId }) {
     const [formData, setFormData] = useState({
         description: '',
         category: '',
         amount: '',
         date: ''
     });
+
+    // Pre-populate form when editing
+    useEffect(() => {
+        if (isModalOpen && editId) {
+            const recordToEdit = spendingData.find(item => item.spending_id === editId);
+            if (recordToEdit) {
+                setFormData({
+                    description: recordToEdit.description,
+                    category: recordToEdit.category,
+                    amount: recordToEdit.amount.toString(),
+                    date: recordToEdit.date
+                });
+            }
+        }
+    }, [isModalOpen, editId, spendingData]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -17,14 +32,13 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
     }
 
     const handleSubmit = () => {
-        console.log('Form data on submit:', formData); // Debug line
+        console.log('Form data on submit:', formData);
 
         if (!formData.date) {
-            // set to today's date automatically
             formData.date = new Date().toISOString().split("T")[0];
         }
 
-        // check
+        // Validation
         if (!formData.category || !formData.amount || !formData.description) {
             alert('Please fill in all fields');
             return;
@@ -36,33 +50,28 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
         }
 
         const recordData = {
-            spending_id: isEditing ? editId : idToAdd + 1,
+            spending_id: editId,
             description: formData.description,
             category: formData.category,
             amount: parseFloat(formData.amount),
             date: formData.date
         };
 
-        setIsModalOpen(false);
-        if (isEditing) {
-            // Update existing record
-            setSpendingData(prev =>
-                prev.map(item =>
-                    item.spending_id === editId ? recordData : item
-                )
-            );
-            alert(`Record updated: $${formData.amount} for ${formData.category} on ${formData.date}`);
-        } else {
-            // Add new record
-            setSpendingData(prev => [...prev, recordData]);
-            alert(`Record added: $${formData.amount} for ${formData.category} on ${formData.date}`);
-        }
+        // Update existing record
+        setSpendingData(prev =>
+            prev.map(item =>
+                item.spending_id === editId ? recordData : item
+            )
+        );
 
+        alert(`Record updated: $${formData.amount} for ${formData.category} on ${formData.date}`);
+        
         setFormData({ description: '', date: '', category: '', amount: '' });
+        setIsModalOpen(false);
     }
 
     const handleCancel = () => {
-        setFormData({ date: '', category: '', amount: '' });
+        setFormData({ description: '', date: '', category: '', amount: '' });
         setIsModalOpen(false);
     }
 
@@ -70,19 +79,19 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
         <>
             {isModalOpen && (
                 <>
-                    {/* Modal Backdrop */}
+                    {/* The background thing when modal opens */}
                     <div className="modal-backdrop fade show"></div>
 
-                    {/* Modal */}
+                    {/* the modal */}
                     <div className="modal fade show d-block" tabIndex="-1" style={{ zIndex: 1055 }}>
                         <div className="modal-dialog modal-dialog-centered">
                             <div className="modal-content shadow-lg">
 
-                                {/* Modal Header */}
+                                {/* modal header */}
                                 <div className="modal-header border-bottom">
                                     <h5 className="modal-title fw-semibold">
-                                        <i className="bi bi-receipt me-2 text-primary"></i>
-                                        {isEditing ? 'Edit Expense' : 'Add New Expense'}
+                                        <i className="fa-solid fa-pen-to-square me-2 text-primary"></i>
+                                        Edit Expense
                                     </h5>
                                     <button
                                         type="button"
@@ -92,10 +101,10 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
                                     ></button>
                                 </div>
 
-                                {/* Modal Body */}
+                                {/* modal body */}
                                 <div className="modal-body">
 
-                                    {/* Description Field */}
+                                    {/* description field */}
                                     <div className="mb-3">
                                         <label htmlFor="description" className="form-label fw-medium">
                                             Description <span className="text-danger">*</span>
@@ -112,7 +121,7 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
                                         />
                                     </div>
 
-                                    {/* Date Field */}
+                                    {/* date field */}
                                     <div className="mb-3">
                                         <label htmlFor="date" className="form-label fw-medium">
                                             Date <span className="text-danger">*</span>
@@ -122,13 +131,13 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
                                             className="form-control"
                                             id="date"
                                             name="date"
-                                            value={!formData.date ? new Date().toISOString().split("T")[0] : formData.date}
+                                            value={formData.date}
                                             onChange={handleInputChange}
                                             required
                                         />
                                     </div>
 
-                                    {/* Category Field */}
+                                    {/* category field */}
                                     <div className="mb-3">
                                         <label htmlFor="category" className="form-label fw-medium">
                                             Spending Category <span className="text-danger">*</span>
@@ -150,7 +159,7 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
                                         </select>
                                     </div>
 
-                                    {/* Amount Field */}
+                                    {/* amount field */}
                                     <div className="mb-4">
                                         <label htmlFor="amount" className="form-label fw-medium">
                                             Amount <span className="text-danger">*</span>
@@ -174,7 +183,7 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
 
                                 </div>
 
-                                {/* Modal Footer */}
+                                {/* modal footer */}
                                 <div className="modal-footer border-top">
                                     <button
                                         type="button"
@@ -188,8 +197,8 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
                                         className="btn btn-primary"
                                         onClick={handleSubmit}
                                     >
-                                        <i className="bi bi-check-circle me-1"></i>
-                                        {isEditing ? 'Update Record' : 'Add Record'}
+                                        <i className="fa-solid fa-check-circle me-1"></i>
+                                        Update Record
                                     </button>
                                 </div>
                             </div>
@@ -201,4 +210,4 @@ function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpending
     )
 }
 
-export default SpendModalForm
+export default EditModalForm

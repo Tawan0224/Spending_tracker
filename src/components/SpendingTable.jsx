@@ -1,4 +1,6 @@
-import '../pages/journal.css';
+import { useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import AlertModelOpenContext from './AlertModelOpenContext';
 
 const categoryIcons = {
     'Groceries': 'fa-solid fa-cart-shopping',
@@ -14,13 +16,19 @@ const categoryIcons = {
 }
 
 export default function SpendingTable({ spendingData, setSpendingData, setIsModalOpen, setEditingId }) {
+    const { setAlertModelOpen, setIsConfirmAlertModal, setModelAlertMessage, confirmActionRef } = useContext(AlertModelOpenContext);
+    const navigate = useNavigate();
     const handleRowClick = (spendingId) => {
-        // Replace with your navigation logic
-        console.log(`Navigate to /journal/${spendingId}`);
+        navigate(`/journal/${spendingId}`);
     };
 
-    const handleDelete = (spendingId) => {
-        setSpendingData((prevData) => prevData.filter(item => item.spending_id !== spendingId));
+    const handleDeleteConfirm = (spendingId) => {
+        setModelAlertMessage('Are you sure you want to delete this record?');
+        setIsConfirmAlertModal(true);
+        confirmActionRef.current = () => {
+            setSpendingData((prevData) => prevData.filter(item => item.spending_id !== spendingId));
+        };
+        setAlertModelOpen(true);
     };
 
     const onClickEdit = (spendingId) => {
@@ -33,7 +41,7 @@ export default function SpendingTable({ spendingData, setSpendingData, setIsModa
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'USD'
+            currency: 'THB'
         }).format(amount);
     };
 
@@ -88,30 +96,33 @@ export default function SpendingTable({ spendingData, setSpendingData, setIsModa
                                                 {spendingData.map((spending) => (
                                                     <tr
                                                         key={spending.spending_id}
-                                                        className="cursor-pointer"
-                                                        onClick={() => handleRowClick(spending.spending_id)}
+                                                        className="cursor-pointer align-middle"
                                                         style={{ cursor: 'pointer' }}
                                                     >
-                                                        <td>
+                                                        <td onClick={() => handleRowClick(spending.spending_id)}>
                                                             <div className="d-flex align-items-center">
                                                                 <div
                                                                     className="rounded-circle bg-light p-2 me-2"
                                                                     style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                                                 >
-                                                                    <i className={`${categoryIcons[spending.category] || categoryIcons['Other']} text-primary`}></i>
+                                                                    <i className={`${categoryIcons[spending.category]
+                                                                        ? categoryIcons[spending.category]
+                                                                        : 'fa-solid fa-circle-info'
+                                                                        } text-primary`}
+                                                                    ></i>
                                                                 </div>
                                                                 <small className="text-muted">{spending.category}</small>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td onClick={() => handleRowClick(spending.spending_id)}>
                                                             <div className="fw-medium">{spending.description}</div>
                                                         </td>
-                                                        <td className="text-end">
+                                                        <td className="text-end" onClick={() => handleRowClick(spending.spending_id)}>
                                                             <span className="badge bg-success fs-6">
                                                                 {formatCurrency(spending.amount)}
                                                             </span>
                                                         </td>
-                                                        <td>
+                                                        <td onClick={() => handleRowClick(spending.spending_id)}>
                                                             <span className="text-muted">
                                                                 {formatDate(spending.date)}
                                                             </span>
@@ -121,7 +132,6 @@ export default function SpendingTable({ spendingData, setSpendingData, setIsModa
                                                                 style={{ marginRight: '1rem' }}
                                                                 className="btn btn-outline-primary btn-sm"
                                                                 onClick={() => {
-                                                                    console.log(`Edit spending with ID: ${spending.spending_id}`);
                                                                     onClickEdit(spending.spending_id);
                                                                 }}
                                                             >
@@ -131,7 +141,7 @@ export default function SpendingTable({ spendingData, setSpendingData, setIsModa
                                                             <button
                                                                 className="btn btn-outline-danger btn-sm"
                                                                 onClick={() => {
-                                                                    handleDelete(spending.spending_id);
+                                                                    handleDeleteConfirm(spending.spending_id);
                                                                 }}
                                                             >
                                                                 <i className="fa-solid fa-trash"></i>
