@@ -10,7 +10,7 @@ import Dropdown from '../components/Dropdown';
 export default function Dashboard() {
   // Get data directly from the hook - same source as Journal
   const [spendingData] = useSpendingDataStorage();
-  
+
   const [pieData, setPieData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [view, setView] = useState("Monthly");
@@ -23,7 +23,7 @@ export default function Dashboard() {
 
   const filterData = (data, viewType) => {
     console.log('Filtering data:', { data, viewType }); // Debug log
-    
+
     if (!data || data.length === 0) {
       setFilteredData([]);
       setPieData([]);
@@ -49,7 +49,9 @@ export default function Dashboard() {
     }
 
     console.log('Filtered data result:', filtered); // Debug log
-    setFilteredData(filtered);
+    if (JSON.stringify(filteredData) !== JSON.stringify(filtered)) {
+      setFilteredData(filtered);
+    }
 
     // Group by category for pie chart
     const grouped = filtered.reduce((acc, entry) => {
@@ -63,15 +65,19 @@ export default function Dashboard() {
     }, []);
 
     console.log('Pie chart data:', grouped); // Debug log
-    setPieData(grouped);
+
+    // Only update if pie data has changed
+    if (JSON.stringify(pieData) !== JSON.stringify(grouped)) {
+      setPieData(grouped);
+    }
   };
 
   // Calculate totals directly from hook data
-  const totalAllTime = spendingData && spendingData.length > 0 
+  const totalAllTime = spendingData && spendingData.length > 0
     ? spendingData.reduce((sum, item) => sum + (item.amount || 0), 0)
     : 0;
-    
-  const totalFiltered = filteredData && filteredData.length > 0 
+
+  const totalFiltered = filteredData && filteredData.length > 0
     ? filteredData.reduce((sum, item) => sum + (item.amount || 0), 0)
     : 0;
 
@@ -96,7 +102,7 @@ export default function Dashboard() {
 
       <div className="charts-container">
         <div className="charts-grid">
-          
+
           {/* Spending Trends Card */}
           <div className="chart-card">
             <h3 className="chart-title">Spending Trends</h3>
@@ -104,10 +110,10 @@ export default function Dashboard() {
               {filteredData && filteredData.length > 0 ? (
                 <ChartLine data={filteredData} />
               ) : (
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   height: '100%',
                   color: '#6b7280',
                   textAlign: 'center'
@@ -125,10 +131,10 @@ export default function Dashboard() {
               {pieData && pieData.length > 0 ? (
                 <ChartPie data={pieData} />
               ) : (
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   height: '100%',
                   color: '#6b7280',
                   textAlign: 'center'
@@ -138,7 +144,7 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-          
+
         </div>
       </div>
     </>

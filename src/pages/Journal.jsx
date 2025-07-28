@@ -48,7 +48,7 @@ export default function Journal() {
                 <div className="container-fluid py-4" style={{ padding: '3rem' }}>
                     <div className="row mb-4">
                         <div className="col-12">
-                            <h1 className="display-5 fw-bold text-white mb-0">
+                            <h1 className="display-5 fw-bold text-black mb-0">
                                 Spending Journal
                             </h1>
                         </div>

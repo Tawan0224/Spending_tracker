@@ -1,21 +1,22 @@
 import { Link, useLocation } from 'react-router-dom';
+import logo  from '../assets/Logo.png';
 import './Navbar.css';
 
 export default function Navbar() {
   const location = useLocation();
-  
+
   return (
     <nav className="navbar">
       <div className="branding">
-        <img src="src/assets/Logo.png" alt="Logo" className="logo" />
+        <img src={logo} alt="Logo" className="logo" />
         <h1 className="brand-text">TRACKLY Spending Tracker</h1>
-    </div>
+      </div>
       <ul className="nav-links">
         <li>
-          <Link className={location.pathname === '/' ? 'active' : ''} to="/"><i className="fa-solid fa-chart-line"></i> Dashboard</Link>
+          <Link className={location.pathname === '/' ? 'active' : ''} to="/">Dashboard</Link>
         </li>
         <li>
-          <Link className={location.pathname === '/journal' ? 'active' : ''} to="/journal"><i className="fa-solid fa-plus"></i> Journal</Link>
+          <Link className={location.pathname === '/journal' ? 'active' : ''} to="/journal">Journal</Link>
         </li>
       </ul>
     </nav>

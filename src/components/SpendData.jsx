@@ -7,19 +7,31 @@ export default function useSpendingDataStorage() {
     let latest_id = spendingData.length > 0 ? spendingData[spendingData.length - 1].spending_id : 0;
 
     useEffect(() => {
-        fetch('/spending-category.json')
-            .then((res) => res.json())
-            .then((data) => {
-                setSpendingData(data);
-            })
-            .catch((err) => console.error('Failed to load spending data JSON:', err));
-        fetch('/category.json')
-            .then((res) => res.json())
-            .then((data) => {
-                setCategoryData(data);
-            })
-            .catch((err) => console.error('Failed to load category data JSON:', err));
+        const loadInitialData = async () => {
+            if (spendingData.length === 0) {
+                try {
+                    const res = await fetch('/spending-category.json');
+                    const data = await res.json();
+                    setSpendingData(data);
+                } catch (err) {
+                    console.error('Failed to load spending data JSON:', err);
+                }
+            }
+
+            if (categoryData.length === 0) {
+                try {
+                    const res = await fetch('/category.json');
+                    const data = await res.json();
+                    setCategoryData(data);
+                } catch (err) {
+                    console.error('Failed to load category data JSON:', err);
+                }
+            }
+        };
+
+        loadInitialData();
     }, []);
+
 
     return [spendingData, setSpendingData, latest_id, categoryData, setCategoryData];
 }
