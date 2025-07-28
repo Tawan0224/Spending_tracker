@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 
-function SpendModalForm({ isModalOpen, setIsModalOpen, spendingData, setSpendingData, idToAdd }) {
+function SpendModalForm({ categoryData, isModalOpen, setIsModalOpen, setSpendingData, idToAdd, isEditing = false, editId = null }) {
     const [formData, setFormData] = useState({
         description: '',
         category: '',
         amount: '',
         date: ''
     });
-    const spendingCategories = spendingData.map(item => item.category);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -25,7 +24,7 @@ function SpendModalForm({ isModalOpen, setIsModalOpen, spendingData, setSpending
             formData.date = new Date().toISOString().split("T")[0];
         }
 
-        // Basic validation
+        // check
         if (!formData.category || !formData.amount || !formData.description) {
             alert('Please fill in all fields');
             return;
@@ -36,22 +35,30 @@ function SpendModalForm({ isModalOpen, setIsModalOpen, spendingData, setSpending
             return;
         }
 
-        // Create new record
-        const newRecord = {
-            spending_id: idToAdd,
+        const recordData = {
+            spending_id: isEditing ? editId : idToAdd + 1,
             description: formData.description,
             category: formData.category,
             amount: parseFloat(formData.amount),
             date: formData.date
         };
 
-        // Add to spending data
-        setSpendingData(prev => [...prev, newRecord]);
+        setIsModalOpen(false);
+        if (isEditing) {
+            // Update existing record
+            setSpendingData(prev =>
+                prev.map(item =>
+                    item.spending_id === editId ? recordData : item
+                )
+            );
+            alert(`Record updated: $${formData.amount} for ${formData.category} on ${formData.date}`);
+        } else {
+            // Add new record
+            setSpendingData(prev => [...prev, recordData]);
+            alert(`Record added: $${formData.amount} for ${formData.category} on ${formData.date}`);
+        }
 
         setFormData({ description: '', date: '', category: '', amount: '' });
-        setIsModalOpen(false);
-
-        alert(`Record added: $${formData.amount} for ${formData.category} on ${formData.date}`);
     }
 
     const handleCancel = () => {
@@ -75,7 +82,7 @@ function SpendModalForm({ isModalOpen, setIsModalOpen, spendingData, setSpending
                                 <div className="modal-header border-bottom">
                                     <h5 className="modal-title fw-semibold">
                                         <i className="bi bi-receipt me-2 text-primary"></i>
-                                        Add New Expense
+                                        {isEditing ? 'Edit Expense' : 'Add New Expense'}
                                     </h5>
                                     <button
                                         type="button"
@@ -135,7 +142,7 @@ function SpendModalForm({ isModalOpen, setIsModalOpen, spendingData, setSpending
                                             required
                                         >
                                             <option value="">Choose a category...</option>
-                                            {spendingCategories.map((category, index) => (
+                                            {categoryData.map((category, index) => (
                                                 <option key={index} value={category}>
                                                     {category}
                                                 </option>
@@ -182,7 +189,7 @@ function SpendModalForm({ isModalOpen, setIsModalOpen, spendingData, setSpending
                                         onClick={handleSubmit}
                                     >
                                         <i className="bi bi-check-circle me-1"></i>
-                                        Add Record
+                                        {isEditing ? 'Update Record' : 'Add Record'}
                                     </button>
                                 </div>
                             </div>

@@ -1,3 +1,5 @@
+import '../pages/journal.css';
+
 const categoryIcons = {
     'Groceries': 'fa-solid fa-cart-shopping',
     'Dining Out': 'fa-solid fa-bowl-rice',
@@ -11,11 +13,22 @@ const categoryIcons = {
     'Miscellaneous': 'fa-solid fa-ellipsis-vertical',
 }
 
-export default function SpendingTable({ spendingData }) {
+export default function SpendingTable({ spendingData, setSpendingData, setIsModalOpen, setEditingId }) {
     const handleRowClick = (spendingId) => {
         // Replace with your navigation logic
         console.log(`Navigate to /journal/${spendingId}`);
     };
+
+    const handleDelete = (spendingId) => {
+        setSpendingData((prevData) => prevData.filter(item => item.spending_id !== spendingId));
+    };
+
+    const onClickEdit = (spendingId) => {
+        console.log(`Inside onClickEdit for ID: ${spendingId}`);
+        setEditingId(spendingId);
+        setIsModalOpen(true);
+    }
+
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-US', {
@@ -38,7 +51,7 @@ export default function SpendingTable({ spendingData }) {
                 <div className="row">
                     <div className="col-12">
                         <div className="card shadow-sm">
-                            <div className="card-header bg-primary text-white">
+                            <div className="card-header bg-black text-white">
                                 <h5 className="card-title mb-0">
                                     <i className="fa-solid fa-receipt me-2"></i>
                                     Spending Records
@@ -73,7 +86,7 @@ export default function SpendingTable({ spendingData }) {
                                             </thead>
                                             <tbody>
                                                 {spendingData.map((spending) => (
-                                                    <tr 
+                                                    <tr
                                                         key={spending.spending_id}
                                                         className="cursor-pointer"
                                                         onClick={() => handleRowClick(spending.spending_id)}
@@ -81,7 +94,7 @@ export default function SpendingTable({ spendingData }) {
                                                     >
                                                         <td>
                                                             <div className="d-flex align-items-center">
-                                                                <div 
+                                                                <div
                                                                     className="rounded-circle bg-light p-2 me-2"
                                                                     style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                                                 >
@@ -103,15 +116,25 @@ export default function SpendingTable({ spendingData }) {
                                                                 {formatDate(spending.date)}
                                                             </span>
                                                         </td>
-                                                        <td className="text-center">
-                                                            <button 
+                                                        <td className="text-center action-div">
+                                                            <button
+                                                                style={{ marginRight: '1rem' }}
                                                                 className="btn btn-outline-primary btn-sm"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleRowClick(spending.spending_id);
+                                                                onClick={() => {
+                                                                    console.log(`Edit spending with ID: ${spending.spending_id}`);
+                                                                    onClickEdit(spending.spending_id);
                                                                 }}
                                                             >
-                                                                <i className="fa-solid fa-eye"></i>
+                                                                <i className="fa-solid fa-pen-to-square"></i>
+                                                            </button>
+
+                                                            <button
+                                                                className="btn btn-outline-danger btn-sm"
+                                                                onClick={() => {
+                                                                    handleDelete(spending.spending_id);
+                                                                }}
+                                                            >
+                                                                <i className="fa-solid fa-trash"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
