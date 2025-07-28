@@ -1,54 +1,7 @@
 body{
   font-family: Arial, sans-serif;
-  background-color: #0B2C3D;
+  background-color: #f9fafb;
   margin: 0;
-  color: #858D71;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #858D71;
-  padding: 10px 20px;
-  color: white;
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
-}
-
-.logo-pic {
-  width: 100px;
-  height: auto;
-  margin-right: 20px;
-  border-radius: 50%;
-}
-
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: bold;
   color: #0B2C3D;
+  
 }
-.logo-text2 {
-  font-size: 1rem;
-  font-style: italic;
-  color: #0B2C3D;
-  margin-left: 10px;
-}
-
-.nav-buttons {
-  list-style: none;
-  display: flex;
-  gap: 40px;
-  margin: 0;
-  padding: 0;
-  color: #0B2C3D;
-  font-size: 1.5rem;
-}
-
-.navbar-right li {
-  cursor: pointer;
-}
-

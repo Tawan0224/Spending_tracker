@@ -13,14 +13,13 @@ const categoryIcons = {
 
 export default function SpendingTable({ spendingData }) {
     const handleRowClick = (spendingId) => {
-        // Replace with your navigation logic
         console.log(`Navigate to /journal/${spendingId}`);
     };
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'USD'
+            currency: 'THB'
         }).format(amount);
     };
 
@@ -59,7 +58,7 @@ export default function SpendingTable({ spendingData }) {
                                                         Description
                                                     </th>
                                                     <th scope="col" width="15%" className="text-end">
-                                                        <i className="fa-solid fa-dollar-sign me-1"></i>
+                                                        (THB)
                                                         Amount
                                                     </th>
                                                     <th scope="col" width="20%">

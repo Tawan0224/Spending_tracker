@@ -8,7 +8,7 @@ import SpendingTable from '../components/SpendingTable';
 
 export default function Journal() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [spendingData, setSpendingData, idToAdd] = useSpendingDataStorage();
+    const [spendingData, setSpendingData, idToAdd, categoryData, setCategoryData] = useSpendingDataStorage();
 
     return (
         <>
@@ -44,7 +44,7 @@ export default function Journal() {
                 setIsModalOpen={setIsModalOpen} 
                 spendingData={spendingData}
                 setSpendingData={setSpendingData}
-                latestId={idToAdd}
+                latestId={idToAdd} 
             />
         </>
     );

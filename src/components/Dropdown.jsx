@@ -15,7 +15,7 @@ export default function Dropdown({ onSelect }) {
   return (
     <div className="dropdown">
       <button onClick={() => setOpen(!open)} className="dropdown-toggle">
-        {selected} ▼
+        {selected} 
       </button>
       <div className={`dropdown-menu ${open ? 'open' : ''}`}>
         {options.map((opt) => (

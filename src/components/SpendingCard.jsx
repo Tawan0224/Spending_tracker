@@ -20,7 +20,6 @@ function SpendingCard(
 ) {
     const navigate = useNavigate();
     const handleClick = (spendingId) => {
-        // Navigate to the spending detail page
         navigate(`/journal/${spendingId}`);
     };
     return (

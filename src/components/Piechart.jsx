@@ -12,15 +12,16 @@ function ChartPie({ data }) {
           nameKey="category"
           outerRadius={100}
           fill="#8884d8"
-          label
+          label={({ category }) => category}
         >
           {data.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip />
+        <Tooltip formatter={(value, name) => [`$${value.toFixed(2)}`, name]} />
       </PieChart>
     </ResponsiveContainer>
   );
 }
+
 export default ChartPie;

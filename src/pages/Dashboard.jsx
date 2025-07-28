@@ -11,7 +11,7 @@ export default function Dashboard() {
   const [spendingData, setSpendingData] = useState([]);
   const [pieData, setPieData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [view, setView] = useState("monthly");
+  const [view, setView] = useState("Monthly"); 
 
   useEffect(() => {
     const data = getSpending();
@@ -23,20 +23,36 @@ export default function Dashboard() {
     filterData(spendingData, view);
   }, [view, spendingData]);
 
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const data = getSpending();
+      setSpendingData(data);
+      filterData(data, view);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    window.addEventListener('focus', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleStorageChange);
+    };
+  }, [view]);
+
   const filterData = (data, viewType) => {
     const now = new Date();
     let filtered = [];
 
-    if (viewType === "daily") {
+    if (viewType === "Daily") {
       const oneDayAgo = new Date();
       oneDayAgo.setDate(now.getDate() - 1);
       filtered = data.filter(entry => new Date(entry.date) >= oneDayAgo);
-    } else if (viewType === "weekly") {
+    } else if (viewType === "Weekly") {
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(now.getDate() - 7);
       filtered = data.filter(entry => new Date(entry.date) >= oneWeekAgo);
     } else {
-      // Monthly (past 30 days)
       const oneMonthAgo = new Date();
       oneMonthAgo.setDate(now.getDate() - 30);
       filtered = data.filter(entry => new Date(entry.date) >= oneMonthAgo);
@@ -66,24 +82,61 @@ export default function Dashboard() {
 
       <div className="totals-container">
         <div className="total-box">
-          <h2><i class="fa-solid fa-chart-line"></i>  Total Spending (All Time)</h2>
-          {/* <p>${totalAllTime}</p> */}
+          <h4><i className="fa-solid fa-chart-line"></i>  Total Spending (All Time)</h4>
+          <p>THB {spendingData.reduce((sum, item) => sum + item.amount, 0).toFixed(2)}</p>
         </div>
         <div className="total-box">
-          <h2><i class="fa-regular fa-calendar"></i>  This Month</h2>
-          {/* <p>${totalSelectedMonth}</p> */}
+          <h4><i className="fa-regular fa-calendar"></i>  {view}  </h4>
+          <p>THB {filteredData.reduce((sum, item) => sum + item.amount, 0).toFixed(2)}</p>
         </div>
       </div>
 
-      <div style={{ margin: '2rem' }}>
-        <div style={{ marginTop: '2rem' }}>
-          <h3>Spending Trends</h3>
+      <div className="charts-container">
+  <div className="charts-grid">
+    
+    {/* Spending Trends Card */}
+    <div className="chart-card">
+      <h3 className="chart-title">Spending Trends</h3>
+      <div className="chart-wrapper">
+        {filteredData && filteredData.length > 0 ? (
           <ChartLine data={filteredData} />
-
-          <h3 style={{ marginTop: '2rem' }}>Spending by Category</h3>
-          <ChartPie data={pieData} />
-        </div>
+        ) : (
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            height: '100%',
+            color: '#6b7280',
+            textAlign: 'center'
+          }}>
+            <p>No spending data available for the selected period</p>
+          </div>
+        )}
       </div>
+    </div>
+
+    <div className="chart-card">
+      <h3 className="chart-title">Spending by Category</h3>
+      <div className="chart-wrapper">
+        {pieData && pieData.length > 0 ? (
+          <ChartPie data={pieData} />
+        ) : (
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            height: '100%',
+            color: '#6b7280',
+            textAlign: 'center'
+          }}>
+            <p>No category data available for the selected period</p>
+          </div>
+        )}
+      </div>
+    </div>
+    
+  </div>
+</div>
     </>
   );
 }

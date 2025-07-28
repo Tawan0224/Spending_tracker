@@ -2,13 +2,15 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background-color: #858D71;
+  background-color: #fcfcf7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links {
   list-style: none;
   display: flex;
   gap: 1rem;
+  margin-bottom: 0;
 }
 
 .nav-links a {
