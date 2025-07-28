@@ -1,3 +1,7 @@
+import { useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import AlertModelOpenContext from './AlertModelOpenContext';
+
 const categoryIcons = {
     'Groceries': 'fa-solid fa-cart-shopping',
     'Dining Out': 'fa-solid fa-bowl-rice',
@@ -11,10 +15,28 @@ const categoryIcons = {
     'Miscellaneous': 'fa-solid fa-ellipsis-vertical',
 }
 
-export default function SpendingTable({ spendingData }) {
+export default function SpendingTable({ spendingData, setSpendingData, setIsModalOpen, setEditingId }) {
+    const { setAlertModelOpen, setIsConfirmAlertModal, setModelAlertMessage, confirmActionRef } = useContext(AlertModelOpenContext);
+    const navigate = useNavigate();
     const handleRowClick = (spendingId) => {
-        console.log(`Navigate to /journal/${spendingId}`);
+        navigate(`/journal/${spendingId}`);
     };
+
+    const handleDeleteConfirm = (spendingId) => {
+        setModelAlertMessage('Are you sure you want to delete this record?');
+        setIsConfirmAlertModal(true);
+        confirmActionRef.current = () => {
+            setSpendingData((prevData) => prevData.filter(item => item.spending_id !== spendingId));
+        };
+        setAlertModelOpen(true);
+    };
+
+    const onClickEdit = (spendingId) => {
+        console.log(`Inside onClickEdit for ID: ${spendingId}`);
+        setEditingId(spendingId);
+        setIsModalOpen(true);
+    }
+
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('en-US', {
@@ -37,7 +59,7 @@ export default function SpendingTable({ spendingData }) {
                 <div className="row">
                     <div className="col-12">
                         <div className="card shadow-sm">
-                            <div className="card-header bg-primary text-white">
+                            <div className="card-header bg-black text-white">
                                 <h5 className="card-title mb-0">
                                     <i className="fa-solid fa-receipt me-2"></i>
                                     Spending Records
@@ -72,45 +94,57 @@ export default function SpendingTable({ spendingData }) {
                                             </thead>
                                             <tbody>
                                                 {spendingData.map((spending) => (
-                                                    <tr 
+                                                    <tr
                                                         key={spending.spending_id}
-                                                        className="cursor-pointer"
-                                                        onClick={() => handleRowClick(spending.spending_id)}
+                                                        className="cursor-pointer align-middle"
                                                         style={{ cursor: 'pointer' }}
                                                     >
-                                                        <td>
+                                                        <td onClick={() => handleRowClick(spending.spending_id)}>
                                                             <div className="d-flex align-items-center">
-                                                                <div 
+                                                                <div
                                                                     className="rounded-circle bg-light p-2 me-2"
                                                                     style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                                                 >
-                                                                    <i className={`${categoryIcons[spending.category] || categoryIcons['Other']} text-primary`}></i>
+                                                                    <i className={`${categoryIcons[spending.category]
+                                                                        ? categoryIcons[spending.category]
+                                                                        : 'fa-solid fa-circle-info'
+                                                                        } text-primary`}
+                                                                    ></i>
                                                                 </div>
                                                                 <small className="text-muted">{spending.category}</small>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td onClick={() => handleRowClick(spending.spending_id)}>
                                                             <div className="fw-medium">{spending.description}</div>
                                                         </td>
-                                                        <td className="text-end">
+                                                        <td className="text-end" onClick={() => handleRowClick(spending.spending_id)}>
                                                             <span className="badge bg-success fs-6">
                                                                 {formatCurrency(spending.amount)}
                                                             </span>
                                                         </td>
-                                                        <td>
+                                                        <td onClick={() => handleRowClick(spending.spending_id)}>
                                                             <span className="text-muted">
                                                                 {formatDate(spending.date)}
                                                             </span>
                                                         </td>
-                                                        <td className="text-center">
-                                                            <button 
+                                                        <td className="text-center action-div">
+                                                            <button
+                                                                style={{ marginRight: '1rem' }}
                                                                 className="btn btn-outline-primary btn-sm"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleRowClick(spending.spending_id);
+                                                                onClick={() => {
+                                                                    onClickEdit(spending.spending_id);
                                                                 }}
                                                             >
-                                                                <i className="fa-solid fa-eye"></i>
+                                                                <i className="fa-solid fa-pen-to-square"></i>
+                                                            </button>
+
+                                                            <button
+                                                                className="btn btn-outline-danger btn-sm"
+                                                                onClick={() => {
+                                                                    handleDeleteConfirm(spending.spending_id);
+                                                                }}
+                                                            >
+                                                                <i className="fa-solid fa-trash"></i>
                                                             </button>
                                                         </td>
                                                     </tr>

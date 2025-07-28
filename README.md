@@ -5,4 +5,9 @@ A simple React.js web application that helps users track their spending, visuali
 - Soe Min Min Latt
 - Min Thant
 
+📸 Screenshots
+Dashboard
 ![Dashboard Screenshot](./assets/Logo.png)
+
+Journal
+![Journal Screenshot](./assets/Logo.png)
